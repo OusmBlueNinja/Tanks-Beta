@@ -1,2 +1,2 @@
-#pygame
-#json
+pygame
+json
