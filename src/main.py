@@ -147,6 +147,10 @@ assetList = [
                 ["barrelGreen_up", "world"],
             ]
 
+logo = pygame.image.load(f'{path}//assets//images//WindowLogo.png')
+
+pygame.display.set_icon(logo)
+
 
 for i in range(len(assetList)):
     debug(f"Loading {assetList[i][0]}", 1)

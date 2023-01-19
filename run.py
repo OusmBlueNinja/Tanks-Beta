@@ -88,7 +88,10 @@ Title = pygame.image.load(f'{path}//src//assets//images//Title.png')
 Splash = pygame.image.load(f'{path}//src//assets//images//Splash.png')
 quit_img = pygame.image.load(f'{path}//src//assets//images//play.png')
 play_img = pygame.image.load(f'{path}//src//assets//images//exit.png')
+StudiosLogo = pygame.image.load(f'{path}//src//assets//images//Logo.png')
+logo = pygame.image.load(f'{path}//src//assets//images//WindowLogo.png')
 
+pygame.display.set_icon(logo)
 
 
 #for song in range(len(songs)):
@@ -139,6 +142,7 @@ def button_play(x, y, szey, szex, Color, text, hover_color):
 
 
 def launch():
+  pygame.mixer.music.fadeout(1000)
   pygame.quit()
   print(f'{b.OKGREEN}[INFO] {b.ENDC}Launching {WindowName} {Version}')
   time.sleep(1)
@@ -153,6 +157,16 @@ shrink = True
 
 def splashLenToPX(text):
   return len(text) * 12
+
+screen.blit(StudiosLogo, (0,0))
+
+pygame.display.update()
+clock.tick(60)
+  
+time.sleep(3)
+
+
+
   
 print(f"{b.OKCYAN}[DEBUG]{b.ENDC} Loading Sounds")
 
@@ -176,6 +190,8 @@ except:
   print(f'{b.FAIL}[ERROR]{b.ENDC} Process ednded with code 1')
   pygame.quit()
   sys.exit()
+  
+
   
     
   
@@ -216,6 +232,7 @@ while Running:  # game loop
             #save.save((player_rect.x), (player_rect.y))
             Running=False
             print(f"{b.WARNING}[WARNING]{b.ENDC} Closeing Launcher")
+            pygame.mixer.music.fadeout(1000)
             pygame.quit()
             sys.exit()
             
