@@ -98,21 +98,51 @@ entities = "/entities"
 images = "/images"
 world = "/world"
 
-allAssets = []
-
-assetList = [["scope", "entities"], ["treeSmall", "world"], [
-    "tankGreen", "entities"], ["barrelGreen", "entities"], ["tracksSmall", "entities"]]
 
 
-debug("Loading Music", 1)
-music = pygame.mixer.music.load(
-    f'{path}//{assets}//{sound}//{music}//music.wav')
+
+
+
+debug(f"Loading Sounds",1)
+
+songs = [
+                    "//assets//sound//music//(1).wav",
+                    "//assets//sound//music//(2).wav",
+                    "//assets//sound//music//(3).wav",
+                    "//assets//sound//music//(4).wav",
+                    "//assets//sound//music//(5).wav"
+                ]
+
+try:
+
+  pygame.mixer.music.load(f'{path}{songs[random.randint(0,(len(songs)-1))]}')
+  pygame.mixer.music.set_volume(0.2)
+  pygame.mixer.music.play()  
+  debug(f"Songs Loaded", 1)
+            
+except:
+  debug(f'Unable to find song files, {path}//src//assets//sound//', 3)  
+  debug(f'Process ednded with code 1', 3)
+  pygame.quit()
+  sys.exit()
 #debug("Loading scope_img",1)
 # scope_img = pygame.image.load(
 #    f'{path}//{assets}//{images}//{entities}//scope.png')
 #debug("Loading treeSmall",1)
 # treeSmall = pygame.image.load(
 #    f'{path}//{assets}//{images}//{world}//treeSmall.png')
+
+allAssets = []
+
+
+# file name | folder name
+assetList = [
+                ["scope", "entities"],
+                ["treeSmall", "world"],
+                ["tankGreen", "entities"],
+                ["barrelGreen", "entities"],
+                ["tracksSmall", "entities"]
+            ]
 
 
 for i in range(len(assetList)):
@@ -224,7 +254,7 @@ while True:  # game loop
     for event in pygame.event.get():  # event loop
         if event.type == QUIT:
             #save.save((player_rect.x), (player_rect.y))
-            print('\n')
+            debug('\n')
             debug("Closing Program with exit code 0", 2)
             pygame.quit()
             sys.exit()
@@ -255,7 +285,28 @@ while True:  # game loop
     player.WeaponRotation(display)
 
     if not pygame.mixer.music.get_busy():
-        pygame.mixer.music.play()
+        debug(f"Loading Sounds",1)
+
+        songs = [
+                            "//assets//sound//music//(1).wav",
+                            "//assets//sound//music//(2).wav",
+                            "//assets//sound//music//(3).wav",
+                            "//assets//sound//music//(4).wav",
+                            "//assets//sound//music//(5).wav"
+                        ]
+        
+        try:
+        
+          pygame.mixer.music.load(f'{path}{songs[random.randint(0,(len(songs)-1))]}')
+          pygame.mixer.music.set_volume(0.2)
+          pygame.mixer.music.play()  
+          debug(f"Songs Loaded", 1)
+                    
+        except:
+          debug(f'Unable to find song files, {path}//src//assets//sound//', 3)  
+          debug(f'Process ednded with code 1', 3)
+          pygame.quit()
+          sys.exit()
 
     TimeNow = time.time()
     dt = TimeNow - TimeThen
