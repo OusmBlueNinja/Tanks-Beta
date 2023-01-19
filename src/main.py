@@ -16,7 +16,7 @@ def clear():
 
 
 global path
-path = os.path.dirname(os.path.realpath(__file__))
+path = "./"
 f = open(f'{path}\\data\\config\\config.json')
 data = json.load(f)
 DEBUG = data['config']['debug']

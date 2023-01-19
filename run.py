@@ -26,7 +26,7 @@ class b:
 clock = pygame.time.Clock()
 
 global path
-path = os.path.dirname(os.path.realpath(__file__))
+path = "./"
 def clear():
     os.system('cls' if os.name == 'nt' else 'clear')
 clear()
@@ -146,7 +146,7 @@ def launch():
   pygame.quit()
   print(f'{b.OKGREEN}[INFO] {b.ENDC}Launching {WindowName} {Version}')
   time.sleep(1)
-  os.system('python ./src/main.py')
+  os.system('cd src/ | main.exe')
   sys.exit()
   
 global shrink, size
