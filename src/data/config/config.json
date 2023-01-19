@@ -1,0 +1,16 @@
+{
+  "config": {
+      "resolutions":{
+        "480":{
+          "width": 795,
+          "height": 480
+        }
+      },
+      "name": "Tanks",
+      "version": "3.8-Beta",
+      "Render-Distance":16,
+      "debug":true
+  }
+}
+
+
