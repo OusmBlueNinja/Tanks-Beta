@@ -22,6 +22,7 @@ data = json.load(f)
 DEBUG = data['config']['debug']
 
 
+
 def debug(data, sevarity: int):
 
     class b:
@@ -83,9 +84,8 @@ Velocity = 150
 screen = pygame.display.set_mode(WINDOW_SIZE, 0, 32)  # initiate the window
 
 
-display = pygame.Surface(
-    (720, 480))  # used as the surface for rendering, which is scaled
-
+display = pygame.Surface((720, 480))  # used as the surface for rendering, which is scaled
+#display = pygame.Surface((1290, 720))
 
 ###########################
 #       Load Assets       #
@@ -141,7 +141,10 @@ assetList = [
                 ["treeSmall", "world"],
                 ["tankGreen", "entities"],
                 ["barrelGreen", "entities"],
-                ["tracksSmall", "entities"]
+                ["tracksSmall", "entities"],
+                ["dirt", "world"],
+                ["Barrels", "world"],
+                ["barrelGreen_up", "world"],
             ]
 
 
@@ -227,12 +230,23 @@ scroll = [0, 0]
 
 
 rockLock = []
+barrelList = []
+sbarrelList = []
 
 debug("Generating Map", 1)
 
 for i in range(100):
-    newRock = [random.randint(-999, 999), random.randint(-999, 999)]
+    newRock = [random.randint(-0, 2000), random.randint(-0, 2000)]
     rockLock.append(newRock)
+    
+for i in range(random.randint(1,3)):
+    newBarrel = [random.randint(-0, 2000), random.randint(-0, 2000)]
+    barrelList.append(newBarrel)
+for i in range(random.randint(1,10)):
+    newBarrel = [random.randint(-0, 2000), random.randint(-0, 2000)]
+    sbarrelList.append(newBarrel)
+    
+    
 debug("Map Generated", 1)
 
 
@@ -245,8 +259,25 @@ runTime = 0
 TimeNow = time.time()
 Load = TimeNow - LoadTime
 debug(f"Loaded in {Load} Seconds", 1)
+
+
+
+def visable(x, y, szex, szey):
+    if scroll[0] >= x and scroll[0] <= (x + szex):
+            if scroll[1] >= y and scroll[1] <= (y + szey):
+                return True
+            else:
+                return False
+    else:
+        return False
+    
+    
+oldPos = 0
+newPos = 0
+i2 = -999
 while True:  # game loop
-    display.fill((0, 255, 0))  # clear screen by filling it with blue
+    
+    display.fill((122,122,122))  # clear screen by filling it with blue
 
     #mousePos = pygame.mouse.get_pos()
     # debug(mousePos)
@@ -254,7 +285,7 @@ while True:  # game loop
     for event in pygame.event.get():  # event loop
         if event.type == QUIT:
             #save.save((player_rect.x), (player_rect.y))
-            debug('\n')
+            print('\n')
             debug("Closing Program with exit code 0", 2)
             pygame.quit()
             sys.exit()
@@ -275,9 +306,46 @@ while True:  # game loop
         player.rotateImage(4)   
     if keys == None:
         player.rotateImage(0)
-    for i in range(100):
+        
+    if scroll[1] >= 2000:
+        scroll[1] = 1999   
+    if scroll[1] <= -0:
+        scroll[1] = -0   
+    if scroll[0] >= 2000:
+        scroll[0] = 1999
+    if scroll[0] <= -0:
+        scroll[0] = -0   
+        
+    for x in range(int(4000 / allAssets[5].get_width())):
+        for y in range(int(4000 / allAssets[5].get_height())):
+            x2 = x
+            y2 = y
+            x2 = x2 * allAssets[5].get_width()
+            
+            y2 = y2 * allAssets[5].get_height()
+            
+            if x2-scroll[0] > 0 - allAssets[5].get_width():
+                if y2-scroll[1] > 0 - allAssets[5].get_height():
+                    if (x2-scroll[0]) - 125< 720 - allAssets[5].get_width():
+                        if (y2-scroll[1]) - 125 < 480 - allAssets[5].get_height():
+                    
+                            pygame.Surface.blit(display, allAssets[5], (((x2-scroll[0])), ((y2-scroll[1]))))
+                            #print(x2, y2)
+                #print((((i-scroll[0])), ((i-scroll[1]))))
+        
+    for i in range(len(rockLock)):
         pygame.Surface.blit(display, allAssets[1], ((
             rockLock[i][0]-scroll[0]), (rockLock[i][1]-scroll[1])))
+        
+    for i in range(len(barrelList)):
+        currentBarrel = pygame.transform.rotate(allAssets[6], random.randint(0,364))
+        pygame.Surface.blit(display, allAssets[6], ((barrelList[i][0]-scroll[0]), (barrelList[i][1]-scroll[1])))
+    for i in range(len(sbarrelList)):
+        currentBarrel = pygame.transform.rotate(allAssets[7], random.randint(0,364))
+        pygame.Surface.blit(display, allAssets[7], ((sbarrelList[i][0]-scroll[0]), (sbarrelList[i][1]-scroll[1])))
+        
+        
+        
     
     
     
@@ -299,7 +367,11 @@ while True:  # game loop
         
           pygame.mixer.music.load(f'{path}{songs[random.randint(0,(len(songs)-1))]}')
           pygame.mixer.music.set_volume(0.2)
+          
+          # ___________________________
           pygame.mixer.music.play()  
+          
+          ## UNCOMENT ME  /\ /\ /\ 
           debug(f"Songs Loaded", 1)
                     
         except:
@@ -313,7 +385,7 @@ while True:  # game loop
     runTime = TimeNow - LoadClear
 
     FPS = clock.get_fps()
-    if FPS < 60 and runTime > 2:
+    if FPS < 30 and runTime > 2:
         debug(
             f"High Frame Render Time, it takes {dt} sconds to render a frame.  fps: {FPS}", 2)
     debug(f'FPS: {FPS}', 4)
