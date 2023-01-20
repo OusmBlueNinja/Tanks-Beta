@@ -274,6 +274,27 @@ class NotGlobal():
         
 NotGlobal = NotGlobal(500, False)
 
+
+#display.blit(textSurface, (SURFACE_SIZE[0]/2-textSurface.get_width()/2,SURFACE_SIZE[1]/2))
+
+"""
+Prints a red text to the screen that says "END OF GAME BOUNDS"
+at the center of the display surface. The text is printed with a
+delay that is incremented or decremented depending on the value of
+the global variable NotGlobal.invert.
+
+This code is useful for displaying a warning to the user when they
+reach the edge of the game map, so they know not to go any further.
+
+@param {pygame.font.Font} font - The font to use for the text.
+@param {pygame.Surface} display - The display surface to blit the
+    text to.
+@param {tuple} SURFACE_SIZE - The size of the display surface.
+@param {float} NotGlobal.dt - The time delta.
+@param {float} NotGlobal.delay - The delay for the text.
+@param {boolean} NotGlobal.invert - Whether to increment or
+    decrement the delay. 
+"""
 def EdgeOfMap():
     # print red test to screen that sais
     # END OF GAME BOUNDS
@@ -381,6 +402,10 @@ while True:  # game loop
         
     
         
+    
+
+
+
     for x in range(int(4000 / allAssets[5].get_width())):
         for y in range(int(4000 / allAssets[5].get_height())):
             x2 = x
