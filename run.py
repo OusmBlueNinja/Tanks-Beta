@@ -146,7 +146,7 @@ def launch():
   pygame.quit()
   print(f'{b.OKGREEN}[INFO] {b.ENDC}Launching {WindowName} {Version}')
   time.sleep(1)
-  os.system('cd src/ | main.exe')
+  os.system('python3 ./src/main.py')
   sys.exit()
   
 global shrink, size
@@ -176,7 +176,7 @@ songs = [
                     "//src//assets//sound//music//(3).wav",
                     "//src//assets//sound//music//(4).wav",
                     "//src//assets//sound//music//(5).wav"
-                ]
+        ]
 
 try:
 
@@ -198,7 +198,7 @@ except:
   
 play = False
 while Running:  # game loop
-    screen.fill((0, 0, 0))  # clear screen
+    #screen.fill((0, 0, 0))  # clear screen
     
     if not pygame.mixer.music.get_busy():
         songs = [

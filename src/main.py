@@ -9,14 +9,16 @@ import sys
 import pygame
 from pygame.locals import *
 
-
+# 
 
 def clear():
     os.system('cls' if os.name == 'nt' else 'clear')
 
 
 global path
-path = "./"
+# get the current working directory
+path = os.path.dirname(os.path.abspath(__file__))
+
 f = open(f'{path}\\data\\config\\config.json')
 data = json.load(f)
 DEBUG = data['config']['debug']
@@ -66,7 +68,9 @@ resoloution = data2['Resolution']
 width, height = data['config']['resolutions'][resoloution]['width'], data['config']['resolutions'][resoloution]['height']
 WindowName = data['config']['name']
 Version = data['config']['version']
-CHUNK_SIZE = data['config']['Render-Distance']
+RenderDistance = data['config']['Render-Distance']
+AmountOfTrees = data['config']['trees']
+
 
 pygame.mixer.pre_init(44100, -16, 2, 512)
 pygame.init()  # initiates pygame
@@ -136,6 +140,8 @@ allAssets = []
 
 
 # file name | folder name
+
+# asset loader 
 assetList = [
                 ["scope", "entities"],
                 ["treeSmall", "world"],
@@ -145,6 +151,7 @@ assetList = [
                 ["dirt", "world"],
                 ["Barrels", "world"],
                 ["barrelGreen_up", "world"],
+                
             ]
 
 logo = pygame.image.load(f'{path}//assets//images//WindowLogo.png')
@@ -181,6 +188,15 @@ class Entity:
         self.Zero = (((SURFACE_SIZE[0]/2)-(75/2)), (SURFACE_SIZE[1]/2)-(70/2))
         self.Gun_image = pygame.transform.rotate(allAssets[3], 0)
         self.offset = [ self.image.get_width() / 2  , self.image.get_height() / 2 ]
+        
+    # draw the current fps to window
+    
+
+
+    # draw the current frame per second to window
+ 
+
+    
       
 
     def WeaponRotation(self, display):
@@ -224,8 +240,8 @@ player = Entity(100, 100, 64, 64, allAssets[2])
 ###########################
 #      Display Scroll     #
 ###########################
-
-scroll = [0, 0]
+# set to center of feild
+scroll = [1000, 1000]
 
 
 ###########################
@@ -239,7 +255,7 @@ sbarrelList = []
 
 debug("Generating Map", 1)
 
-for i in range(100):
+for i in range(AmountOfTrees):
     newRock = [random.randint(-0, 2000), random.randint(-0, 2000)]
     rockLock.append(newRock)
     
@@ -249,6 +265,42 @@ for i in range(random.randint(1,3)):
 for i in range(random.randint(1,10)):
     newBarrel = [random.randint(-0, 2000), random.randint(-0, 2000)]
     sbarrelList.append(newBarrel)
+
+class NotGlobal():
+    def __init__(self, d, i) -> None:
+        self.delay = d
+        self.invert = i
+        self.dt = 0
+        
+NotGlobal = NotGlobal(500, False)
+
+def EdgeOfMap():
+    # print red test to screen that sais
+    # END OF GAME BOUNDS
+    text = "END OF GAME BOUNDS"
+    font = pygame.font.Font("freesansbold.ttf", 20)
+    # print text to display surfacewwwwwwwwwwwwwwwwwwwwwwww
+    # find 
+    textSurface = font.render(text, False, (255, 0, 0))
+    
+    # blit to display surface
+    
+    if NotGlobal.delay >= 400:
+        NotGlobal.invert = True
+    elif NotGlobal.delay <= -400:
+        NotGlobal.invert = False
+        
+    if NotGlobal.invert:
+        NotGlobal.delay -= 999 * NotGlobal.dt
+        display.blit(textSurface, (SURFACE_SIZE[0]/2-textSurface.get_width()/2,SURFACE_SIZE[1]/2))
+    else:
+        NotGlobal.delay += 999 * NotGlobal.dt
+
+
+
+
+    
+
     
     
 debug("Map Generated", 1)
@@ -279,7 +331,23 @@ def visable(x, y, szex, szey):
 oldPos = 0
 newPos = 0
 i2 = -999
+
+def ShowFPS(display):
+        # get current fps
+        #of the game
+        fps = str(int(clock.get_fps()))
+        text = "FPS: " + fps
+        font = pygame.font.Font("freesansbold.ttf", 20)
+        text = font.render(text, 1, (255, 255, 255))
+
+        # draw rectangle to show FPS
+        display.blit(text, (10, 10))
 while True:  # game loop
+    TimeNow = time.time()
+    dt = TimeNow - TimeThen
+    NotGlobal.dt = dt
+    runTime = TimeNow - LoadClear
+    TimeThen = time.time()
     
     display.fill((122,122,122))  # clear screen by filling it with blue
 
@@ -311,14 +379,7 @@ while True:  # game loop
     if keys == None:
         player.rotateImage(0)
         
-    if scroll[1] >= 2000:
-        scroll[1] = 1999   
-    if scroll[1] <= -0:
-        scroll[1] = -0   
-    if scroll[0] >= 2000:
-        scroll[0] = 1999
-    if scroll[0] <= -0:
-        scroll[0] = -0   
+    
         
     for x in range(int(4000 / allAssets[5].get_width())):
         for y in range(int(4000 / allAssets[5].get_height())):
@@ -330,8 +391,8 @@ while True:  # game loop
             
             if x2-scroll[0] > 0 - allAssets[5].get_width():
                 if y2-scroll[1] > 0 - allAssets[5].get_height():
-                    if (x2-scroll[0]) - 125< 720 - allAssets[5].get_width():
-                        if (y2-scroll[1]) - 125 < 480 - allAssets[5].get_height():
+                    if (x2-scroll[0]) - 125< RenderDistance[0] - allAssets[5].get_width():
+                        if (y2-scroll[1]) - 125 < RenderDistance[1] - allAssets[5].get_height():
                     
                             pygame.Surface.blit(display, allAssets[5], (((x2-scroll[0])), ((y2-scroll[1]))))
                             #print(x2, y2)
@@ -384,9 +445,7 @@ while True:  # game loop
           pygame.quit()
           sys.exit()
 
-    TimeNow = time.time()
-    dt = TimeNow - TimeThen
-    runTime = TimeNow - LoadClear
+    
 
     FPS = clock.get_fps()
     if FPS < 30 and runTime > 2:
@@ -394,9 +453,25 @@ while True:  # game loop
             f"High Frame Render Time, it takes {dt} sconds to render a frame.  fps: {FPS}", 2)
     debug(f'FPS: {FPS}', 4)
 
-    TimeThen = time.time()
+    
     #debug(f"{dt}", 1)
-
+    if DEBUG:
+        ShowFPS(display)
+        
+    if scroll[1] >= 2000:
+        EdgeOfMap()
+        scroll[1] = 1999
+    if scroll[1] <= -0:
+        EdgeOfMap()
+        scroll[1] = -0   
+    if scroll[0] >= 2000:
+        EdgeOfMap()
+        scroll[0] = 1999
+    if scroll[0] <= -0:
+        EdgeOfMap()
+        scroll[0] = -0  
+        
+         
     screen.blit(pygame.transform.scale(display, WINDOW_SIZE), (0, 0))
     pygame.display.update()
     clock.tick()
