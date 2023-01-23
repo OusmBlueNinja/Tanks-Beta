@@ -75,6 +75,7 @@ AmountOfTrees = data['config']['trees']
 pygame.mixer.pre_init(44100, -16, 2, 512)
 pygame.init()  # initiates pygame
 pygame.mixer.set_num_channels(64)
+pygame.mouse.set_visible(False)
 
 pygame.display.set_caption(WindowName + " " + Version)
 
@@ -179,12 +180,13 @@ pygame.mixer.music.set_volume(0.5)
 
 
 class Entity:
-    def __init__(self, x, y, width, height, image):
+    def __init__(self, x, y, width, height, image, scope):
         self.x = int(x)
         self.y = int(y)
         self.width = int(width)
         self.height = int(height)
         self.image = image
+        self.scopeImg = scope
         self.Zero = (((SURFACE_SIZE[0]/2)-(75/2)), (SURFACE_SIZE[1]/2)-(70/2))
         self.Gun_image = pygame.transform.rotate(allAssets[3], 0)
         self.offset = [ self.image.get_width() / 2  , self.image.get_height() / 2 ]
@@ -217,12 +219,14 @@ class Entity:
         axis = ( (self.Zero[0] - int(self.Gun_image.get_width() / 2 ) + self.offset[0]) , (self.Zero[1] - int(self.Gun_image.get_height() / 2 ) + self.offset[1])  )
         
         pygame.Surface.blit(display, self.Gun_image, axis)
+        pygame.Surface.blit(display, self.scopeImg, ((mousePos[0] + (self.image.get_width()/2) /8 - self.scopeImg.get_width()/2, mousePos[1])))
 
     def main(self, display):
         
         
         obj_rect = pygame.Rect(self.x, self.y, self.width, self.height)
         pygame.Surface.blit(display, self.image, self.Zero)
+        
         
     def rotateImage(self, direction: int):
         
@@ -234,7 +238,7 @@ class Entity:
 
 # init
 # X Y ( Size )
-player = Entity(100, 100, 64, 64, allAssets[2])
+player = Entity(100, 100, 64, 64, allAssets[2], allAssets[0])
 
 
 ###########################
